@@ -1,0 +1,51 @@
+zadání 3 - graf železnièní sítì
+
+- jsou zadány hrany a vrcholy v souborech csv
+
+jako optimáln íøešení se mi jeví uložit sít do matice https://www.geeksforgeeks.org/graph-and-its-representations/
+informace o vrcholech do pole struktur
+
+- pak  následuje implementace algoritmù, ty by mìli jít øešit maticovì
+
+analýza porblému:
+- dostanu 2 soubory: vrcholy a hrany
+- je možné je repzerntovat porgrammam QGIS (https://qgis.org/en/site/forusers/download.html)
+
+parametry:
+- bude se spostet graph.exe -v vrcholy.csv -e hrany.csv -mst hrany-out.csv (minimální kostra) - mrn mout.csv (nová sí)
+- pokud špatnì povinny parametr -> exit faulture + chybová hláška
+- pokud žádné nepovinné -> nic s návratovou hondotou exit success 
+
+vstupní data:
+- typ csv
+- sloupce oddìlené èárkou ,
+    atributy:
+    - WKT - goegrafický popis (obsahuje èárky, nutno pozor!)
+    - id - identifikace  (možno více stejných, beru jen první)
+    - ostatní (-mst -> nezmìnìné, -mrn -> nation,cntryname -prázdné)
+    
+    vrcholy:
+    - WKT, id, sname
+    - pokud bude tabulka s jinými atributy, apliakce skonèí s hláškou
+    - pøi exportu nutno dodržet strukturu
+    
+    hrany:
+    - WKT, id, nation, cntryname, source (zdroj), target (cíl), clength (cena v metrech)  
+    - pokud bude tabulka s jinými atributy, apliakce skonèí s hláškou
+    - pøi exportu nutno dodržet strukturu
+    - akceptovat pouze první nenulový výskyt hrany
+    
+øešení    
+- naèíst údaje o vrcholech a hranách do pole struktur
+    - ovìøení a filtrování dat
+- vytvoøit matici souslednosti pro další použití v algoritmech
+
+- mst - najdu alg a ten implementuju - odloženo
+- mrn - také
+
+architektura aplikace:
+- main.c - hlavní soubor
+- matrix.c,h  - matice knihovna
+- tree.c,h    - graf knihovna, možná by sem šli dát i algoritmy
+- usefc.c,h   - užiteèné funkce knihovna (napø in_array)  
+
