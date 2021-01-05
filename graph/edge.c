@@ -8,7 +8,7 @@ edge *edge_load(const char filename[], uint *datasize){
     FILE *f = NULL;
 	char line[LINE_LEN], *word;
 	edge *temp = NULL;
-	uint act_idx = 0, max_idx = BLOCK_LEN, comp_cnt, duplicated=0, line_id = 0;
+	uint act_idx = 0, max_idx = BLOCK_LEN, comp_cnt, ignore=0, line_id = 0, i, atoied_word;
 
 	if (!filename || !strcmp(filename, "")){
         printf("Invalid edge filename.\n");
@@ -28,7 +28,7 @@ edge *edge_load(const char filename[], uint *datasize){
 	}	
 
 	while (fgets(line, LINE_LEN, f)) {        
-        duplicated = 0;
+        ignore = 0;
       
         if(line_id==0 && !strstr(line, EDGE_FILE_HEADER)){       
                 printf("Invalid edge file.\n");
@@ -47,22 +47,53 @@ edge *edge_load(const char filename[], uint *datasize){
 		word = strtok(line, DELIMITERS);
 		comp_cnt = 0;
 		while (word) {
-			if (strcmp(word, "NULL")) {                    
+			if (strcmp(word, "NULL")) {                 
 				switch (comp_cnt) {
 					case 0: strcpy(temp[act_idx].wkt, word); break;
-					case 1: if(act_idx==0 || (uint)atoi(word) != temp[act_idx-1].id){
-                                temp[act_idx].id = atoi(word); 
-                                duplicated = 0;
-                            }else{
-                                duplicated = 1;
-                            }
+
+					case 1: atoied_word = (uint)atoi(word);
+							for(i=0;i<act_idx;i++){
+								if(temp[i].id == atoied_word){
+									ignore = 1;
+									break;
+								}
+							}
+							if(!ignore)
+								temp[act_idx].id = atoied_word;
                             break;
                             
-					case 2: word[strlen(word)-1] = 0; 
-                            strcpy(temp[act_idx].sname, word); break;
+					case 2: temp[act_idx].nation = atoi(word); break;
+					case 3: strcpy(temp[act_idx].cntryname, word); break;
+					case 4: temp[act_idx].source = atoi(word); break;
+					
+					case 5: atoied_word = (uint)atoi(word);
+							if(!ignore && temp[act_idx].source != atoied_word){
+								for(i=0;i<act_idx;i++){
+									if(	(temp[i].source == temp[act_idx].source && temp[i].target == atoied_word)
+										||
+										(temp[i].source == atoied_word 			&& temp[i].target == temp[act_idx].source)
+									){
+										ignore = 1;
+									}
+								}
+
+								if(!ignore)
+									temp[act_idx].target = atoied_word; 
+							}else{
+								ignore = 1;
+							}							
+							break;
+
+					case 6: atoied_word = (uint)atoi(word);
+							if(!ignore && atoied_word > 0) {
+								temp[act_idx].clength = atoied_word; 
+							}else{
+								ignore = 1;
+							}
+							break;
 				}
 			}
-            if(duplicated)
+            if(ignore)
                 break;
 			
 			/*printf("line %d: %s\n", act_idx, word);*/
@@ -71,7 +102,7 @@ edge *edge_load(const char filename[], uint *datasize){
 		}
 
         
-		if(!duplicated)
+		if(!ignore)
 		    act_idx++;
 
 		if (act_idx >= max_idx) {
@@ -113,8 +144,8 @@ int edge_compar_fn(const void *p1, const void *p2){
 void edge_print(edge *edge_data, uint datasize){
     uint i;
 
-    printf("Vypis nactenych vrcholu:\n");
+    printf("Vypis nactenych hran:\n");
     for(i=0;i<datasize;i++){
-        printf("i: %d | id: %d | wkt: %s | sname: %s\n", i, edge_data[i].id, edge_data[i].wkt, edge_data[i].sname);
+        printf("i: %d | id: %d | wkt: %s | nation: %d | cntryname: %s | source: %d | target: %d | clength: %d |\n", i, edge_data[i].id, edge_data[i].wkt, edge_data[i].nation, edge_data[i].cntryname, edge_data[i].source, edge_data[i].target, edge_data[i].clength);
     }
 }

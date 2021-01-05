@@ -5,13 +5,19 @@
 
 #define LINE_LEN 256
 #define BLOCK_LEN 16
+#define EDGE_WKT_LEN 128
+#define CNTRYNAME_LEN 64
 #define DELIMITERS ","
-#define EDGE_FILE_HEADER "WKT,id,sname"
+#define EDGE_FILE_HEADER "WKT,id,nation,cntryname,source,target,clength"
 
 typedef struct theedge {
-	char wkt[64];
+	char wkt[EDGE_WKT_LEN];
     uint id;
-    char sname[64];
+    uint nation;
+    char cntryname[CNTRYNAME_LEN];
+    uint source;
+    uint target;
+    uint clength;
 } edge; 
 
 edge *edge_load(const char filename[], uint *datasize);

@@ -8,7 +8,7 @@ vertex *vertex_load(const char filename[], uint *datasize){
     FILE *f = NULL;
 	char line[LINE_LEN], *word;
 	vertex *temp = NULL;
-	uint act_idx = 0, max_idx = BLOCK_LEN, comp_cnt, duplicated=0, line_id = 0;
+	uint act_idx = 0, max_idx = BLOCK_LEN, comp_cnt, ignore=0, line_id = 0;
 
 	if (!filename || !strcmp(filename, "")){
         printf("Invalid vertex filename.\n");
@@ -28,7 +28,7 @@ vertex *vertex_load(const char filename[], uint *datasize){
 	}	
 
 	while (fgets(line, LINE_LEN, f)) {        
-        duplicated = 0;
+        ignore = 0;
       
         if(line_id==0 && !strstr(line, VERTEX_FILE_HEADER)){       
                 printf("Invalid vertex file.\n");
@@ -52,17 +52,17 @@ vertex *vertex_load(const char filename[], uint *datasize){
 					case 0: strcpy(temp[act_idx].wkt, word); break;
 					case 1: if(act_idx==0 || (uint)atoi(word) != temp[act_idx-1].id){
                                 temp[act_idx].id = atoi(word); 
-                                duplicated = 0;
                             }else{
-                                duplicated = 1;
+                                ignore = 1;
                             }
                             break;
                             
 					case 2: word[strlen(word)-1] = 0; 
-                            strcpy(temp[act_idx].sname, word); break;
+                            strcpy(temp[act_idx].sname, word); 
+                            break;
 				}
 			}
-            if(duplicated)
+            if(ignore)
                 break;
 			
 			/*printf("line %d: %s\n", act_idx, word);*/
@@ -71,7 +71,7 @@ vertex *vertex_load(const char filename[], uint *datasize){
 		}
 
         
-		if(!duplicated)
+		if(!ignore)
 		    act_idx++;
 
 		if (act_idx >= max_idx) {

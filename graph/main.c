@@ -40,41 +40,15 @@ int main(int argc, char *argv[]) {
 /* nacteni hran */
 	edge_data = edge_load(argv[e_argument_index+1], &edge_dlen);
 	if(!edge_dlen){
-		return 1;
+		return 2;
 	}
 	qsort(edge_data, edge_dlen, sizeof(edge), edge_compar_fn);
 	edge_print(edge_data, edge_dlen);
 
-	
-/*
-	FILE *v_file = NULL;
-	char v_file_line[LINE_LEN];
+	if(mst_argument_index>=0)
+		printf("ready for argument mst\n");
+	if(mrn_argument_index>=0)
+		printf("ready for argument mrn\n");
 
-	v_file = fopen(argv[v_argument_index+1], "r");
-	if(!v_file){
-		printf("Invalid vertex file.\n");
-		return 1;
-	}
-	while(!feof(v_file)){
-		fgets(v_file_line, LINE_LEN, v_file);
-		printf("%s\n", v_file_line);break;
-	}
-	fclose(v_file);*/
-
-/* nacteni hran *//*
-	FILE *e_file = NULL;
-	char e_file_line[LINE_LEN];
-
-	e_file = fopen(argv[e_argument_index+1], "r");
-	if(!e_file){
-		printf("Invalid edge file.\n");
-		return 2;
-	}
-	while(!feof(e_file)){
-		fgets(e_file_line, LINE_LEN, e_file);
-		printf("%s\n", e_file_line);break;
-	}
-	fclose(e_file);*/
-
-	return 1;
+	return 0;
 }
