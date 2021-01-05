@@ -1,27 +1,27 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "vertex.h"
+#include "edge.h"
 #include "usefc.h"
 
-vertex *vertex_load(const char filename[], uint *datasize){
+edge *edge_load(const char filename[], uint *datasize){
     FILE *f = NULL;
 	char line[LINE_LEN], *word;
-	vertex *temp = NULL;
+	edge *temp = NULL;
 	uint act_idx = 0, max_idx = BLOCK_LEN, comp_cnt, duplicated=0, line_id = 0;
 
 	if (!filename || !strcmp(filename, "")){
-        printf("Invalid vertex filename.\n");
+        printf("Invalid edge filename.\n");
         return NULL;
     } 
     
 	f = fopen(filename, "r");
 	if (!f){ 
-        printf("Cannot open vertex file.\n");
+        printf("Cannot open edge file.\n");
 		return NULL;
     }
 
-	temp = (vertex *) malloc(BLOCK_LEN * sizeof(vertex));
+	temp = (edge *) malloc(BLOCK_LEN * sizeof(edge));
 	if (!temp) {
 		fclose(f);
 		return NULL;
@@ -30,8 +30,8 @@ vertex *vertex_load(const char filename[], uint *datasize){
 	while (fgets(line, LINE_LEN, f)) {        
         duplicated = 0;
       
-        if(line_id==0 && !strstr(line, VERTEX_FILE_HEADER)){       
-                printf("Invalid vertex file.\n");
+        if(line_id==0 && !strstr(line, EDGE_FILE_HEADER)){       
+                printf("Invalid edge file.\n");
                 fclose(f);
                 free(temp);
                 return NULL;                       
@@ -42,7 +42,7 @@ vertex *vertex_load(const char filename[], uint *datasize){
             continue;
         }
 
-		memset((void *) &temp[act_idx], 0, sizeof(vertex));
+		memset((void *) &temp[act_idx], 0, sizeof(edge));
  	 
 		word = strtok(line, DELIMITERS);
 		comp_cnt = 0;
@@ -75,8 +75,8 @@ vertex *vertex_load(const char filename[], uint *datasize){
 		    act_idx++;
 
 		if (act_idx >= max_idx) {
-			vertex *t = NULL;
-			t = (vertex *) realloc(temp, (max_idx + BLOCK_LEN) * sizeof(vertex));
+			edge *t = NULL;
+			t = (edge *) realloc(temp, (max_idx + BLOCK_LEN) * sizeof(edge));
 			if (t) {
 				temp = t;
 				max_idx += BLOCK_LEN;
@@ -93,10 +93,10 @@ vertex *vertex_load(const char filename[], uint *datasize){
 	return temp;
 }
 
-int vertex_compar_fn(const void *p1, const void *p2){
+int edge_compar_fn(const void *p1, const void *p2){
     uint id1, id2;
-    id1 = ((vertex *) p1)->id;
-    id2 = ((vertex *) p2)->id;
+    id1 = ((edge *) p1)->id;
+    id2 = ((edge *) p2)->id;
 
     if(id1 == id2)
         return 0;
@@ -110,11 +110,11 @@ int vertex_compar_fn(const void *p1, const void *p2){
     return 0;
 }
 
-void vertex_print(vertex *vertex_data, uint datasize){
+void edge_print(edge *edge_data, uint datasize){
     uint i;
 
     printf("Vypis nactenych vrcholu:\n");
     for(i=0;i<datasize;i++){
-        printf("i: %d | id: %d | wkt: %s | sname: %s\n", i, vertex_data[i].id, vertex_data[i].wkt, vertex_data[i].sname);
+        printf("i: %d | id: %d | wkt: %s | sname: %s\n", i, edge_data[i].id, edge_data[i].wkt, edge_data[i].sname);
     }
 }

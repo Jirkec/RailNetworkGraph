@@ -3,13 +3,15 @@
 #include <string.h>
 #include "usefc.h"
 #include "vertex.h"
+#include "edge.h"
 
 #define LINE_LEN 256
 
 int main(int argc, char *argv[]) {
 	int v_argument_index, e_argument_index, mst_argument_index, mrn_argument_index;
-	uint vertex_dlen = 0;
+	uint vertex_dlen = 0, edge_dlen = 0;
 	vertex *vertex_data;
+	edge *edge_data;
 
 /* osetreni argumentu */
 	if(argc < 4){
@@ -32,9 +34,18 @@ int main(int argc, char *argv[]) {
 	if(!vertex_dlen){
 		return 1;
 	}
-	printf("vertex_dlen %d\n",vertex_dlen);
 	qsort(vertex_data, vertex_dlen, sizeof(vertex), vertex_compar_fn);
 	vertex_print(vertex_data, vertex_dlen);
+
+/* nacteni hran */
+	edge_data = edge_load(argv[e_argument_index+1], &edge_dlen);
+	if(!edge_dlen){
+		return 1;
+	}
+	qsort(edge_data, edge_dlen, sizeof(edge), edge_compar_fn);
+	edge_print(edge_data, edge_dlen);
+
+	
 /*
 	FILE *v_file = NULL;
 	char v_file_line[LINE_LEN];

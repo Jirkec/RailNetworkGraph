@@ -1,13 +1,13 @@
 #ifndef __VERTEX_H__
 #define __VERTEX_H__
 
+#include "usefc.h"
 
 #define LINE_LEN 256
 #define BLOCK_LEN 16
 #define DELIMITERS ","
 #define VERTEX_FILE_HEADER "WKT,id,sname"
 
-typedef unsigned int uint;
 
 typedef struct thevertex {
 	char wkt[64];
