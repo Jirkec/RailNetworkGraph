@@ -113,7 +113,7 @@ int vertex_compar_fn(const void *p1, const void *p2){
 void vertex_print(vertex *vertex_data, uint datasize){
     uint i;
 
-    printf("Vypis nactenych vrcholu:\n");
+    printf("List of loaded vertexes:\n");
     for(i=0;i<datasize;i++){
         printf("i: %d | id: %d | wkt: %s | sname: %s\n", i, vertex_data[i].id, vertex_data[i].wkt, vertex_data[i].sname);
     }

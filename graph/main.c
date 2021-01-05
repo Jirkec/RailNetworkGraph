@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
 	vertex *vertex_data;
 	edge *edge_data;
 
-/* osetreni argumentu */
+/* argument validation */
 	if(argc < 4){
 		printf("Error: Invalid argument count!\n");
 		return EXIT_FAILURE;
@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
 		return EXIT_FAILURE;
 	} 
 
-/* nacteni vrcholu */
+/* vertex load */
 	vertex_data = vertex_load(argv[v_argument_index+1], &vertex_dlen);
 	if(!vertex_dlen){
 		return 1;
@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
 	qsort(vertex_data, vertex_dlen, sizeof(vertex), vertex_compar_fn);
 	vertex_print(vertex_data, vertex_dlen);
 
-/* nacteni hran */
+/* edge load */
 	edge_data = edge_load(argv[e_argument_index+1], &edge_dlen);
 	if(!edge_dlen){
 		return 2;
@@ -45,8 +45,11 @@ int main(int argc, char *argv[]) {
 	qsort(edge_data, edge_dlen, sizeof(edge), edge_compar_fn);
 	edge_print(edge_data, edge_dlen);
 
+/* minimal tree scalet */
 	if(mst_argument_index>=0)
 		printf("ready for argument mst\n");
+
+/* minimal tree scalet with all stuff */		
 	if(mrn_argument_index>=0)
 		printf("ready for argument mrn\n");
 
