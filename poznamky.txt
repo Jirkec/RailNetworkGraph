@@ -46,6 +46,7 @@ vstupní data:
 architektura aplikace:
 - main.c - hlavní soubor
 - matrix.c,h  - matice knihovna
-- tree.c,h    - graf knihovna, možná by sem šli dát i algoritmy
+- vertex.c,h - knihovna vrcholu
+- tree.c,h    - graf knihovna, možná by sem šli dát i algoritmy *uvidim
 - usefc.c,h   - užiteèné funkce knihovna (napø in_array)  
 
