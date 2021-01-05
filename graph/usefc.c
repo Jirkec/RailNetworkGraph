@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "usefc.h"
+#include <string.h>
 
 void printArrayString(int size, char **values){
     int i;
@@ -17,11 +18,12 @@ void printArrayString(int size, char **values){
 }
 
 int inArrayString(int size, char **values, char *search){
+    int found = -1, i;
+
     if(!size || size ==0 || !values || !search ){
         return 0;
     }
 
-    int found = -1, i;
     for(i=0;i<size;i++){
         if(strcmp(values[i], search)==0){
             found = i;

@@ -1,18 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "usefc.h"
 #include "vertex.h"
 
 #define LINE_LEN 256
 
 int main(int argc, char *argv[]) {
+	int v_argument_index, e_argument_index, mst_argument_index, mrn_argument_index;
+	uint vertex_dlen = 0;
+	vertex *vertex_data;
+
 /* osetreni argumentu */
 	if(argc < 4){
 		printf("Error: Invalid argument count!\n");
 		return EXIT_FAILURE;
 	}
-
-	int v_argument_index, e_argument_index, mst_argument_index, mrn_argument_index;
+ 
 	
 	v_argument_index = inArrayString(argc, argv, "-v");
 	e_argument_index = inArrayString(argc, argv, "-e");
@@ -22,9 +26,13 @@ int main(int argc, char *argv[]) {
 	if(v_argument_index<0 || e_argument_index<0){
 		printf("Error: Invalid argument count!\n");
 		return EXIT_FAILURE;
-	}
+	} 
 
 /* nacteni vrcholu */
+	vertex_data = vertex_load(argv[1], &vertex_dlen);
+	qsort(vertex_data, vertex_dlen, sizeof(vertex), vertex_compar_fn);
+
+/*
 	FILE *v_file = NULL;
 	char v_file_line[LINE_LEN];
 
@@ -37,9 +45,9 @@ int main(int argc, char *argv[]) {
 		fgets(v_file_line, LINE_LEN, v_file);
 		printf("%s\n", v_file_line);break;
 	}
-	fclose(v_file);
+	fclose(v_file);*/
 
-/* nacteni hran */
+/* nacteni hran *//*
 	FILE *e_file = NULL;
 	char e_file_line[LINE_LEN];
 
@@ -52,5 +60,7 @@ int main(int argc, char *argv[]) {
 		fgets(e_file_line, LINE_LEN, e_file);
 		printf("%s\n", e_file_line);break;
 	}
-	fclose(v_file);
+	fclose(e_file);*/
+
+	return 1;
 }

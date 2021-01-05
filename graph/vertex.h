@@ -15,7 +15,7 @@ typedef struct thevertex {
     char sname[64];
 } vertex; 
 
-vertex *load(const char filename[], uint *datasize);
-int compar_fn(const void *p1, const void *p2);
+vertex *vertex_load(const char filename[], uint *datasize);
+int vertex_compar_fn(const void *p1, const void *p2);
 
 #endif

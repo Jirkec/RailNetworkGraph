@@ -4,4 +4,4 @@ FILES=*.c *.h
 BIN=graph.exe
 
 $(BIN): $(FILES)
-	$(CC) $^ -o $@
+	$(CC) $^ -o $@ $(CFLAFS)
