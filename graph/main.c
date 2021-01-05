@@ -15,8 +15,7 @@ int main(int argc, char *argv[]) {
 	if(argc < 4){
 		printf("Error: Invalid argument count!\n");
 		return EXIT_FAILURE;
-	}
- 
+	} 
 	
 	v_argument_index = inArrayString(argc, argv, "-v");
 	e_argument_index = inArrayString(argc, argv, "-e");
@@ -29,9 +28,13 @@ int main(int argc, char *argv[]) {
 	} 
 
 /* nacteni vrcholu */
-	vertex_data = vertex_load(argv[1], &vertex_dlen);
+	vertex_data = vertex_load(argv[v_argument_index+1], &vertex_dlen);
+	if(!vertex_dlen){
+		return 1;
+	}
+	printf("vertex_dlen %d\n",vertex_dlen);
 	qsort(vertex_data, vertex_dlen, sizeof(vertex), vertex_compar_fn);
-
+	vertex_print(vertex_data, vertex_dlen);
 /*
 	FILE *v_file = NULL;
 	char v_file_line[LINE_LEN];

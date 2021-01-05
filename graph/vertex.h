@@ -17,5 +17,6 @@ typedef struct thevertex {
 
 vertex *vertex_load(const char filename[], uint *datasize);
 int vertex_compar_fn(const void *p1, const void *p2);
+void vertex_print(vertex *vertex_data, uint datasize);
 
 #endif

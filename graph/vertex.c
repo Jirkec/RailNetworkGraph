@@ -7,13 +7,16 @@ vertex *vertex_load(const char filename[], uint *datasize){
     FILE *f = NULL;
 	char line[LINE_LEN], *word;
 	vertex *temp = NULL;
-	uint act_idx = 0, max_idx = BLOCK_LEN, comp_cnt, duplicated=0;
-	
-	if (!filename || !strcmp(filename, "")) return NULL;
-	
+	uint act_idx = 0, max_idx = BLOCK_LEN, comp_cnt, duplicated=0, line_id = 0;
+
+	if (!filename || !strcmp(filename, "")){
+        printf("Invalid vertex filename.\n");
+        return NULL;
+    } 
+    
 	f = fopen(filename, "r");
 	if (!f){ 
-        printf("Invalid vertex file.\n");
+        printf("Cannot open vertex file.\n");
 		return NULL;
     }
 
@@ -21,19 +24,25 @@ vertex *vertex_load(const char filename[], uint *datasize){
 	if (!temp) {
 		fclose(f);
 		return NULL;
-	}
-	
+	}	
 
 	while (fgets(line, LINE_LEN, f)) {
-        if(act_idx==0 && strcmp(line, VERTEX_FILE_HEADER)!=0){
-            printf("Invalid vertex file.\n");
-            fclose(f);
-            free(temp);
-            return NULL;
+        duplicated = 0;
+      
+        if(line_id==0 && !strstr(line, VERTEX_FILE_HEADER)){       
+                printf("Invalid vertex file.\n");
+                fclose(f);
+                free(temp);
+                return NULL;                       
+        }
+
+        if(line_id==0){
+            line_id++;
+            continue;
         }
 
 		memset((void *) &temp[act_idx], 0, sizeof(vertex));
-	
+ 	 
 		word = strtok(line, DELIMITERS);
 		comp_cnt = 0;
 		while (word) {
@@ -44,7 +53,6 @@ vertex *vertex_load(const char filename[], uint *datasize){
                                 temp[act_idx].id = atoi(word); 
                                 duplicated = 0;
                             }else{
-                                free((void *) &temp[act_idx]);
                                 duplicated = 1;
                             }
                             break;
@@ -52,7 +60,6 @@ vertex *vertex_load(const char filename[], uint *datasize){
 					case 2: strcpy(temp[act_idx].sname, word); break;
 				}
 			}
-
             if(duplicated)
                 break;
 			
@@ -60,6 +67,8 @@ vertex *vertex_load(const char filename[], uint *datasize){
 			word = strtok(NULL, DELIMITERS);
 			comp_cnt++;
 		}
+
+        
 		if(!duplicated)
 		    act_idx++;
 
@@ -72,6 +81,8 @@ vertex *vertex_load(const char filename[], uint *datasize){
 			}
 			else break;
 		}
+
+        line_id++;
 	}
 	
 	if (datasize) *datasize = act_idx;
@@ -95,4 +106,13 @@ int vertex_compar_fn(const void *p1, const void *p2){
         return 1;
 
     return 0;
+}
+
+void vertex_print(vertex *vertex_data, uint datasize){
+    uint i;
+
+    printf("Vypis nactenych vrcholu:\n");
+    for(i=0;i<datasize;i++){
+        printf("i: %d | id: %d | wkt: %s | sname: %s\n", i, vertex_data[i].id, vertex_data[i].wkt, vertex_data[i].sname);
+    }
 }
