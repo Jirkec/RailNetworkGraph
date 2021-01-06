@@ -4,6 +4,7 @@
 #include "usefc.h"
 #include "vertex.h"
 #include "edge.h"
+#include "matrix.h"
 
 #define LINE_LEN 256
 
@@ -12,6 +13,7 @@ int main(int argc, char *argv[]) {
 	uint vertex_dlen = 0, edge_dlen = 0;
 	vertex *vertex_data;
 	edge *edge_data;
+	matrix *a = NULL;
 
 /* argument validation */
 	if(argc < 4){
@@ -35,7 +37,7 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 	qsort(vertex_data, vertex_dlen, sizeof(vertex), vertex_compar_fn);
-	vertex_print(vertex_data, vertex_dlen);
+	/*vertex_print(vertex_data, vertex_dlen);*/
 
 /* edge load */
 	edge_data = edge_load(argv[e_argument_index+1], &edge_dlen);
@@ -43,7 +45,7 @@ int main(int argc, char *argv[]) {
 		return 2;
 	}
 	qsort(edge_data, edge_dlen, sizeof(edge), edge_compar_fn);
-	edge_print(edge_data, edge_dlen);
+	/*edge_print(edge_data, edge_dlen);*/
 
 /* minimal tree scalet */
 	if(mst_argument_index>=0)
@@ -52,6 +54,19 @@ int main(int argc, char *argv[]) {
 /* minimal tree scalet with all stuff */		
 	if(mrn_argument_index>=0)
 		printf("ready for argument mrn\n");
+
+/* finding minimal tree scelet */
+	if(mst_argument_index>=0 || mrn_argument_index>=0){
+		printf("matrix testing\n");
+
+		a = matrix_create(5, 5);
+		matrix_set(a, 1.0);
+		a->items[2][3] = 5.0;
+
+		matrix_print(a);
+
+		matrix_free(&a);
+	}
 
 	return 0;
 }
