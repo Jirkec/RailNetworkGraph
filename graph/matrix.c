@@ -83,18 +83,18 @@ void matrix_set(matrix *m, real value){
 }
 
 void matrix_set_edges(matrix *m, edge *edges, uint edge_dlen, vertex *vertexes, uint vertex_dlen){
-	uint i,limit=50;
+	uint i;
 	int source, target;
-	for(i=0; i<limit;i++){
+	for(i=0; i<edge_dlen;i++){
 		source = vertex_get_key_by_id(vertexes, vertex_dlen, edges[i].source);
 		target = vertex_get_key_by_id(vertexes, vertex_dlen, edges[i].target);
-		printf("clen %dx%d | %dx%d: %d\n",source, target, edges[i].source, edges[i].target, edges[i].clength);
-		/*if(source>=0 && target>=0){
+		/*printf("clen %dx%d | %dx%d: %d\n",source, target, edges[i].source, edges[i].target, edges[i].clength);*/
+		if(source>=0 && target>=0){
 			m->items[source][target] = edges[i].clength;
 			m->items[target][source] = edges[i].clength;
 		}else{
 			break;
-		}*/
+		}
 	}
 }
 

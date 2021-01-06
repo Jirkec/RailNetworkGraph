@@ -6,8 +6,6 @@
 #include "edge.h"
 #include "matrix.h"
 
-#define LINE_LEN 256
-
 int main(int argc, char *argv[]) {
 	int v_argument_index, e_argument_index, mst_argument_index, mrn_argument_index;
 	uint vertex_dlen = 0, edge_dlen = 0;

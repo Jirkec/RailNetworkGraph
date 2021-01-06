@@ -3,16 +3,16 @@
 
 #include "usefc.h"
 
-#define LINE_LEN 256
-#define BLOCK_LEN 16
-#define VER_WKT_LEN 64
+#define VERTEX_LINE_LEN 256
+#define VERTEX_BLOCK_LEN 16
+#define VERTEX_WKT_LEN 128
 #define SNAME_LEN 64
-#define DELIMITERS ","
+#define VERTEX_DELIMITERS ","
 #define VERTEX_FILE_HEADER "WKT,id,sname"
 
 
 typedef struct thevertex {
-	char wkt[VER_WKT_LEN];
+	char wkt[VERTEX_WKT_LEN];
     uint id;
     char sname[SNAME_LEN];
 } vertex; 

@@ -6,9 +6,9 @@
 
 vertex *vertex_load(const char filename[], uint *datasize){
     FILE *f = NULL;
-	char line[LINE_LEN], *word;
+	char line[VERTEX_LINE_LEN], *word;
 	vertex *temp = NULL;
-	uint act_idx = 0, max_idx = BLOCK_LEN, comp_cnt, ignore=0, line_id = 0;
+	uint act_idx = 0, max_idx = VERTEX_BLOCK_LEN, comp_cnt, ignore=0, line_id = 0;
 
 	if (!filename || !strcmp(filename, "")){
         printf("Invalid vertex filename.\n");
@@ -21,13 +21,13 @@ vertex *vertex_load(const char filename[], uint *datasize){
 		return NULL;
     }
 
-	temp = (vertex *) malloc(BLOCK_LEN * sizeof(vertex));
+	temp = (vertex *) malloc(VERTEX_BLOCK_LEN * sizeof(vertex));
 	if (!temp) {
 		fclose(f);
 		return NULL;
 	}	
 
-	while (fgets(line, LINE_LEN, f)) {        
+	while (fgets(line, VERTEX_LINE_LEN, f)) {        
         ignore = 0;
       
         if(line_id==0 && !strstr(line, VERTEX_FILE_HEADER)){       
@@ -44,7 +44,7 @@ vertex *vertex_load(const char filename[], uint *datasize){
 
 		memset((void *) &temp[act_idx], 0, sizeof(vertex));
  	 
-		word = strtok(line, DELIMITERS);
+		word = strtok(line, VERTEX_DELIMITERS);
 		comp_cnt = 0;
 		while (word) {
 			if (strcmp(word, "NULL")) {                    
@@ -66,7 +66,7 @@ vertex *vertex_load(const char filename[], uint *datasize){
                 break;
 			
 			/*printf("line %d: %s\n", act_idx, word);*/
-			word = strtok(NULL, DELIMITERS);
+			word = strtok(NULL, VERTEX_DELIMITERS);
 			comp_cnt++;
 		}
 
@@ -76,10 +76,10 @@ vertex *vertex_load(const char filename[], uint *datasize){
 
 		if (act_idx >= max_idx) {
 			vertex *t = NULL;
-			t = (vertex *) realloc(temp, (max_idx + BLOCK_LEN) * sizeof(vertex));
+			t = (vertex *) realloc(temp, (max_idx + VERTEX_BLOCK_LEN) * sizeof(vertex));
 			if (t) {
 				temp = t;
-				max_idx += BLOCK_LEN;
+				max_idx += VERTEX_BLOCK_LEN;
 			}
 			else break;
 		}

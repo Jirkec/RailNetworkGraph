@@ -6,9 +6,10 @@
 
 edge *edge_load(const char filename[], uint *datasize){
     FILE *f = NULL;
-	char line[LINE_LEN], *word;
+	char line[EDGE_LINE_LEN], *word, wkt[EDGE_LINE_LEN], *wkt_end, *line_wo_wkt;
 	edge *temp = NULL;
-	uint act_idx = 0, max_idx = BLOCK_LEN, comp_cnt, ignore=0, line_id = 0, i, atoied_word;
+	uint act_idx = 0, max_idx = EDGE_BLOCK_LEN, comp_cnt, ignore=0, line_id = 0, i, atoied_word, invalid_case;
+	
 
 	if (!filename || !strcmp(filename, "")){
         printf("Invalid edge filename.\n");
@@ -21,14 +22,14 @@ edge *edge_load(const char filename[], uint *datasize){
 		return NULL;
     }
 
-	temp = (edge *) malloc(BLOCK_LEN * sizeof(edge));
+	temp = (edge *) malloc(EDGE_BLOCK_LEN * sizeof(edge));
 	
 	if (!temp) {
 		fclose(f);
 		return NULL;
 	}	
 
-	while (fgets(line, LINE_LEN, f)) {        
+	while (fgets(line, EDGE_LINE_LEN, f)) {        
         ignore = 0;
       
         if(line_id==0 && !strstr(line, EDGE_FILE_HEADER)){       
@@ -44,18 +45,24 @@ edge *edge_load(const char filename[], uint *datasize){
         }
 
 		memset((void *) &temp[act_idx], 0, sizeof(edge));
- 	 
-		word = strtok(line, DELIMITERS);
+	
+		/* WKT handeling */	
+		printf("1\n");
+		*wkt='\0';								/* nulovani wkt */printf("2\n");		
+		wkt_end = strchr(line+1, '"');			/* nalezeni konce wkt (+1, abych vynechal prvni uvozovky) */printf("3line_id:%d\n",line_id);
+		memcpy(wkt, line, wkt_end-line+1);		/* vykopirovani wkt z line (+1, abych vzal i posledni posledni uvozovky) */printf("4\n");
+		wkt[wkt_end-line+1]='\0';				/* ukonceni wkt retezce */printf("5\n");
+		line_wo_wkt = &line[wkt_end-line+2];	/* odstraneni wkt z line (+2, abych nekopiroval carku za wkt) */printf("6\n");
+		strcpy(temp[act_idx].wkt, wkt);			/* kopirovani wkt do wkt hrany */printf("7\n");
+		
+		/*printf("len:%d | wkt:%s| wkt_end: %s| line:%s| line_wo_wkt:%s| \n",wkt_end-line, wkt, wkt_end, line,line_wo_wkt);*/
+
+		word = strtok(line_wo_wkt, EDGE_DELIMITERS);
 		comp_cnt = 0;
 		while (word) {
 			if (strcmp(word, "NULL")) {                 
 				switch (comp_cnt) {
-					case 0: strcpy(temp[act_idx].wkt, word); break;
-					case 1: strcat(temp[act_idx].wkt, ","); 
-							strcat(temp[act_idx].wkt, word); 
-							break;
-
-					case 2: atoied_word = (uint)atoi(word);
+					case 0: atoied_word = (uint)atoi(word);
 							for(i=0;i<act_idx;i++){
 								if(temp[i].id == atoied_word){
 									ignore = 1;
@@ -66,11 +73,11 @@ edge *edge_load(const char filename[], uint *datasize){
 								temp[act_idx].id = atoied_word;
                             break;
                             
-					case 3: temp[act_idx].nation = atoi(word); break;
-					case 4: strcpy(temp[act_idx].cntryname, word); break;
-					case 5: temp[act_idx].source = atoi(word); break;
+					case 1: temp[act_idx].nation = atoi(word); break;
+					case 2: strcpy(temp[act_idx].cntryname, word); break;
+					case 3: temp[act_idx].source = atoi(word); break;
 					
-					case 6: atoied_word = (uint)atoi(word);
+					case 4: atoied_word = (uint)atoi(word);
 							if(!ignore && temp[act_idx].source != atoied_word){
 								for(i=0;i<act_idx;i++){
 									if(	(temp[i].source == temp[act_idx].source && temp[i].target == atoied_word)
@@ -88,20 +95,22 @@ edge *edge_load(const char filename[], uint *datasize){
 							}							
 							break;
 
-					case 7: atoied_word = (uint)atoi(word);
+					case 5: atoied_word = (uint)atoi(word);
 							if(!ignore && atoied_word > 0) {
 								temp[act_idx].clength = atoied_word; 
 							}else{
 								ignore = 1;
 							}
 							break;
+					default: invalid_case=1; break;
 				}
 			}
-            if(ignore)
+            if(ignore || invalid_case)
                 break;
 			
+			
 			/*printf("line %d: %s\n", act_idx, word);*/
-			word = strtok(NULL, DELIMITERS);
+			word = strtok(NULL, EDGE_DELIMITERS);
 			comp_cnt++;
 		}
 
@@ -111,10 +120,10 @@ edge *edge_load(const char filename[], uint *datasize){
 
 		if (act_idx >= max_idx) {
 			edge *t = NULL;
-			t = (edge *) realloc(temp, (max_idx + BLOCK_LEN) * sizeof(edge));
+			t = (edge *) realloc(temp, (max_idx + EDGE_BLOCK_LEN) * sizeof(edge));
 			if (t) {
 				temp = t;
-				max_idx += BLOCK_LEN;
+				max_idx += EDGE_BLOCK_LEN;
 			}
 			else break;
 		}

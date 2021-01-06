@@ -3,11 +3,11 @@
 
 #include "usefc.h"
 
-#define LINE_LEN 256
-#define BLOCK_LEN 16
-#define EDGE_WKT_LEN 128
+#define EDGE_LINE_LEN 4096
+#define EDGE_BLOCK_LEN 16
+#define EDGE_WKT_LEN 4096
 #define CNTRYNAME_LEN 64
-#define DELIMITERS ","
+#define EDGE_DELIMITERS ","
 #define EDGE_FILE_HEADER "WKT,id,nation,cntryname,source,target,clength"
 
 typedef struct theedge {
