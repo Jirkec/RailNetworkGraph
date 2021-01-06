@@ -118,3 +118,12 @@ void vertex_print(vertex *vertex_data, uint datasize){
         printf("i: %d | id: %d | wkt: %s | sname: %s\n", i, vertex_data[i].id, vertex_data[i].wkt, vertex_data[i].sname);
     }
 }
+
+int vertex_get_key_by_id(vertex *vertex_data, uint datasize, uint id){
+	uint i;
+	for(i =0; i<datasize;i++){
+		if(vertex_data[i].id == id)
+			return i;
+	}
+	return -1;
+}

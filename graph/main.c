@@ -37,6 +37,7 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 	qsort(vertex_data, vertex_dlen, sizeof(vertex), vertex_compar_fn);
+	printf("vertexes: %d\n",vertex_dlen);
 	/*vertex_print(vertex_data, vertex_dlen);*/
 
 /* edge load */
@@ -45,6 +46,7 @@ int main(int argc, char *argv[]) {
 		return 2;
 	}
 	qsort(edge_data, edge_dlen, sizeof(edge), edge_compar_fn);
+	printf("edges: %d\n",edge_dlen);
 	/*edge_print(edge_data, edge_dlen);*/
 
 /* minimal tree scalet */
@@ -59,12 +61,19 @@ int main(int argc, char *argv[]) {
 	if(mst_argument_index>=0 || mrn_argument_index>=0){
 		printf("matrix testing\n");
 
-		a = matrix_create(5, 5);
+/*		a = matrix_create(5, 5);
 		matrix_set(a, 1.0);
 		a->items[2][3] = 5.0;
 
 		matrix_print(a);
 
+		matrix_free(&a);*/
+
+		a = matrix_create(vertex_dlen, vertex_dlen);
+		matrix_set_edges(a, edge_data, edge_dlen, vertex_data, vertex_dlen);
+		/*matrix_print(a);*/
+		printf("clen on 1x2: %f\n",a->items[vertex_get_key_by_id(vertex_data, vertex_dlen, 1)][vertex_get_key_by_id(vertex_data, vertex_dlen, 2)]);
+		printf("clen on 1x2: %f\n",a->items[0][1]);
 		matrix_free(&a);
 	}
 
