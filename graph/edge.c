@@ -51,7 +51,9 @@ edge *edge_load(const char filename[], uint *datasize){
 			if (strcmp(word, "NULL")) {                 
 				switch (comp_cnt) {
 					case 0: strcpy(temp[act_idx].wkt, word); break;
-					case 1: strcat(temp[act_idx].wkt, word); break;
+					case 1: strcat(temp[act_idx].wkt, ","); 
+							strcat(temp[act_idx].wkt, word); 
+							break;
 
 					case 2: atoied_word = (uint)atoi(word);
 							for(i=0;i<act_idx;i++){
