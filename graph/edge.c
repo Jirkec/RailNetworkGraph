@@ -151,7 +151,7 @@ edge *edge_load(const char filename[], uint *datasize){
 	return temp;
 }
 
-int edge_compar_fn(const void *p1, const void *p2){
+int edge_compar_fn_by_id(const void *p1, const void *p2){
     uint id1, id2;
     id1 = ((edge *) p1)->id;
     id2 = ((edge *) p2)->id;
@@ -168,6 +168,13 @@ int edge_compar_fn(const void *p1, const void *p2){
     return 0;
 }
 
+int edge_compar_fn_by_clen(const void *p1, const void *p2)
+{
+    edge* a1 = (edge*)p1;
+    edge* b1 = (edge*)p2;
+    return a1->clength > b1->clength;
+}
+
 void edge_print(edge *edge_data, uint datasize){
     uint i;
 
@@ -175,4 +182,44 @@ void edge_print(edge *edge_data, uint datasize){
     for(i=0;i<datasize;i++){
         printf("i: %d | id: %d | wkt: %s | nation: %d | cntryname: %s | source: %d | target: %d | clength: %f |\n", i, edge_data[i].id, edge_data[i].wkt_pointer, edge_data[i].nation, edge_data[i].cntryname, edge_data[i].source, edge_data[i].target, edge_data[i].clength);
     }
+}
+
+void edge_export_mst(edge *edge_data, uint datasize, char *filename){
+	FILE *fp;
+	uint i;
+
+	fp = fopen(filename, "w");
+	if(!fp){
+		printf("Cannot open file to write mst!\n");
+		return;
+	}	
+
+	qsort(edge_data, datasize, sizeof(edge), edge_compar_fn_by_id);
+
+	fputs(EDGE_FILE_HEADER, fp);
+	fputs("\n", fp);
+	for(i=0;i<datasize;i++){
+			fputs(edge_data[i].wkt_pointer, fp);			
+			fputs(",", fp);
+
+			fprintf(fp, "%u",edge_data[i].id);						
+			fputs(",", fp);
+
+			fprintf(fp, "%u",edge_data[i].nation);			
+			fputs(",", fp);
+
+			fprintf(fp, "%s", edge_data[0].cntryname);				
+			fputs(",", fp);
+
+			fprintf(fp, "%u",edge_data[i].source);			
+			fputs(",", fp);
+
+			fprintf(fp, "%u",edge_data[i].target);
+			fputs(",", fp);
+			
+			fprintf(fp, "%f",edge_data[i].clength);	
+			
+		fputs("\n", fp);
+		}
+	fclose(fp);
 }

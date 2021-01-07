@@ -5,13 +5,15 @@
 #include "vertex.h"
 #include "edge.h"
 #include "matrix.h"
+#include "graph.h"
 
 int main(int argc, char *argv[]) {
 	int v_argument_index, e_argument_index, mst_argument_index, mrn_argument_index;
-	uint vertex_dlen = 0, edge_dlen = 0;
+	uint vertex_dlen = 0, edge_dlen = 0, edge_mst_dlen = 0;
 	vertex *vertex_data;
-	edge *edge_data;
-	matrix *a = NULL;
+	edge *edge_data, *edge_mst;
+	/*matrix *a = NULL;*/
+	graph *graph_temp = NULL;
 
 /* argument validation */
 	if(argc < 4){
@@ -43,37 +45,22 @@ int main(int argc, char *argv[]) {
 	if(!edge_dlen){
 		return 2;
 	}
-	qsort(edge_data, edge_dlen, sizeof(edge), edge_compar_fn);
+	qsort(edge_data, edge_dlen, sizeof(edge), edge_compar_fn_by_id);
 	printf("edges: %d\n",edge_dlen);
 	/*edge_print(edge_data, edge_dlen);*/
 
-/* minimal tree scalet */
-	if(mst_argument_index>=0)
-		printf("ready for argument mst\n");
-
-/* minimal tree scalet with all stuff */		
-	if(mrn_argument_index>=0)
-		printf("ready for argument mrn\n");
-
 /* finding minimal tree scelet */
 	if(mst_argument_index>=0 || mrn_argument_index>=0){
-		printf("matrix testing\n");
+		printf("mst testing\n");
+		graph_temp = createGraph(vertex_dlen, edge_dlen, edge_data);	
+		edge_mst = KruskalMST(graph_temp, vertex_data, &edge_mst_dlen);
 
-/*		a = matrix_create(5, 5);
-		matrix_set(a, 1.0);
-		a->items[2][3] = 5.0;
-
-		matrix_print(a);
-
-		matrix_free(&a);*/
-
-		a = matrix_create(vertex_dlen, vertex_dlen);
-		matrix_set_edges(a, edge_data, edge_dlen, vertex_data, vertex_dlen);
-		matrix_print(a);
-		/*printf("clen on 1x2: %f\n",a->items[vertex_get_key_by_id(vertex_data, vertex_dlen, 1)][vertex_get_key_by_id(vertex_data, vertex_dlen, 2)]);*/
-		/*printf("clen on 237x239: %f\n",a->items[vertex_get_key_by_id(vertex_data, vertex_dlen, 237)][vertex_get_key_by_id(vertex_data, vertex_dlen, 239)]);	*/
-		matrix_free(&a);
-	}
-
+		if(mst_argument_index>=0){
+			printf("edge_mst_dlen:%d\n",edge_mst_dlen);
+			edge_export_mst(edge_mst, edge_mst_dlen, argv[mst_argument_index+1]);
+		}
+		/*printf("edge_mst_dlen:%d\n",edge_mst_dlen);*/
+		/*edge_print(edge_mst, edge_mst_dlen);*/
+	} 
 	return 0;
 }

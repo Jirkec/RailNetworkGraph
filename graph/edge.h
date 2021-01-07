@@ -21,7 +21,9 @@ typedef struct theedge {
 } edge; 
 
 edge *edge_load(const char filename[], uint *datasize);
-int edge_compar_fn(const void *p1, const void *p2);
+int edge_compar_fn_by_id(const void *p1, const void *p2);
+int edge_compar_fn_by_clen(const void *p1, const void *p2);
 void edge_print(edge *edge_data, uint datasize);
+void edge_export_mst(edge *edge_data, uint datasize, char *filename);
 
 #endif
