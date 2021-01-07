@@ -28,15 +28,7 @@ edge *edge_load(const char filename[], uint *datasize){
 		fclose(f);
 		return NULL;
 	}
-	/*
-	uint max_line_length = 0;
-	while (fgets(line, EDGE_LINE_LEN, f)) {
-		if(strlen(line)>max_line_length)
-			max_line_length = strlen(line);
-	}
-	printf("max_line_length:%d",max_line_length);
-	return NULL;
-*/
+
 	while (fgets(line, EDGE_LINE_LEN, f)) { 
 		int act_wkt_len = 0;       
         ignore = 0;
@@ -56,16 +48,13 @@ edge *edge_load(const char filename[], uint *datasize){
 		memset((void *) &temp[act_idx], 0, sizeof(edge));
 	
 		/* WKT handeling dynamic */
-		/**wkt='\0';*/																/* nulovani wkt *//*printf("2\n");	*/	
-		wkt_end = strchr(line+1, '"');											/* nalezeni konce wkt (+1, abych vynechal prvni uvozovky) *//*printf("3line_id:%d\n",line_id);*/
-		act_wkt_len = wkt_end-line+1;											/* velikost wkt (+1, abych vzal i posledni posledni uvozovky) */
-		strncpy(wkt, line, act_wkt_len);										/* vykopirovani wkt z line (+1, abych vzal i posledni posledni uvozovky) *//*printf("4\n");*/
-		wkt[act_wkt_len]='\0';													/* ukonceni wkt retezce *//*printf("5\n");*/
-		/*strcpy(line_wo_wkt,wkt_end+1);*/									/* odstraneni wkt z line (+2, abych nekopiroval carku za wkt) *//*printf("6 strlenwkt:%d| wktlen:%d| wktend:%s\n",strlen(wkt), act_wkt_len, wkt_end);*/
+		wkt_end = strchr(line+1, '"');												/* nalezeni konce wkt (+1, abych vynechal prvni uvozovky) *//*printf("3line_id:%d\n",line_id);*/
+		act_wkt_len = wkt_end-line+1;												/* velikost wkt (+1, abych vzal i posledni posledni uvozovky) */
+		strncpy(wkt, line, act_wkt_len);											/* vykopirovani wkt z line (+1, abych vzal i posledni posledni uvozovky) *//*printf("4\n");*/
+		wkt[act_wkt_len]='\0';														/* ukonceni wkt retezce *//*printf("5\n");*/
 		temp[act_idx].wkt_pointer = (char *)malloc((act_wkt_len+1) * sizeof(char));	/* alokovani pameti pro wkt  - nezapomenout uvolnit ve free */	
-		strncpy(temp[act_idx].wkt_pointer, wkt, act_wkt_len);					/* kopirovani wkt do wkt hrany *//*printf("7\n");*/
+		strncpy(temp[act_idx].wkt_pointer, wkt, act_wkt_len);						/* kopirovani wkt do wkt hrany *//*printf("7\n");*/
 		temp[act_idx].wkt_pointer[act_wkt_len] = '\0';
-		/*printf("act_wkt_len: %d wktpointer:%s\n",act_wkt_len,temp[act_idx].wkt_pointer);*/
 		
 		word = strtok(wkt_end+2, EDGE_DELIMITERS);
 		comp_cnt = 0;
@@ -74,7 +63,6 @@ edge *edge_load(const char filename[], uint *datasize){
 			invalid_case=0;
 
 			if (strcmp(word, "NULL")) {   
-				/*printf("comp_cnt:|%d| word:|%s|",comp_cnt, word);*/
 				switch (comp_cnt) {
 					case 0: atoied_word = (uint)atoi(word);
 							for(i=0;i<act_idx;i++){
@@ -123,7 +111,6 @@ edge *edge_load(const char filename[], uint *datasize){
                 break;
 			}
 			
-			/*printf("line %d: %s\n", act_idx, word);*/
 			word = strtok(NULL, EDGE_DELIMITERS);
 			comp_cnt++;
 		}
@@ -167,12 +154,34 @@ int edge_compar_fn_by_id(const void *p1, const void *p2){
 
     return 0;
 }
+int edge_compar_fn_by_id_down(const void *p1, const void *p2){
+    uint id1, id2;
+    id1 = ((edge *) p1)->id;
+    id2 = ((edge *) p2)->id;
+
+    if(id1 == id2)
+        return 0;
+
+    if(id1 < id2)
+        return 1;
+
+    if(id1 > id2)
+        return -1;
+
+    return 0;
+}
 
 int edge_compar_fn_by_clen(const void *p1, const void *p2)
 {
     edge* a1 = (edge*)p1;
     edge* b1 = (edge*)p2;
     return a1->clength > b1->clength;
+}
+int edge_compar_fn_by_clen_down(const void *p1, const void *p2)
+{
+    edge* a1 = (edge*)p1;
+    edge* b1 = (edge*)p2;
+    return a1->clength < b1->clength;
 }
 
 void edge_print(edge *edge_data, uint datasize){
@@ -194,7 +203,7 @@ void edge_export_mst(edge *edge_data, uint datasize, char *filename){
 		return;
 	}	
 
-	qsort(edge_data, datasize, sizeof(edge), edge_compar_fn_by_id);
+	qsort(edge_data, datasize, sizeof(edge), edge_compar_fn_by_id_down);
 
 	fputs(EDGE_FILE_HEADER, fp);
 	fputs("\n", fp);
@@ -208,7 +217,7 @@ void edge_export_mst(edge *edge_data, uint datasize, char *filename){
 			fprintf(fp, "%u",edge_data[i].nation);			
 			fputs(",", fp);
 
-			fprintf(fp, "%s", edge_data[0].cntryname);				
+			fprintf(fp, "%s", edge_data[i].cntryname);				
 			fputs(",", fp);
 
 			fprintf(fp, "%u",edge_data[i].source);			
@@ -220,6 +229,49 @@ void edge_export_mst(edge *edge_data, uint datasize, char *filename){
 			fprintf(fp, "%f",edge_data[i].clength);	
 			
 		fputs("\n", fp);
+		}
+	fclose(fp);
+}
+
+void edge_export_mrn(edge *edge_data, uint datasize, char *filename){
+	FILE *fp;
+	uint i;
+	uint new_id = 1;
+printf("1\n");
+	fp = fopen(filename, "w");
+	if(!fp){
+		printf("Cannot open file to write mrn!\n");
+		return;
+	}	
+
+	qsort(edge_data, datasize, sizeof(edge), edge_compar_fn_by_clen_down);
+
+	fputs(EDGE_FILE_HEADER, fp);
+	fputs("\n", fp);
+	for(i=0;i<datasize;i++){
+			fputs(edge_data[i].wkt_pointer, fp);			
+			fputs(",", fp);
+
+			fprintf(fp, "%u",new_id);						
+			fputs(",", fp);
+
+			fprintf(fp, "%u",edge_data[i].nation);			
+			fputs(",", fp);
+
+			fprintf(fp, "%s", edge_data[i].cntryname);				
+			fputs(",", fp);
+
+			fprintf(fp, "%u",edge_data[i].source);			
+			fputs(",", fp);
+
+			fprintf(fp, "%u",edge_data[i].target);
+			fputs(",", fp);
+			
+			fprintf(fp, "%.3f",edge_data[i].clength);	
+			
+		fputs("\n", fp);
+
+		new_id++;
 		}
 	fclose(fp);
 }

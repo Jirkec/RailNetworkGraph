@@ -4,7 +4,6 @@
 #include "usefc.h"
 #include "vertex.h"
 #include "edge.h"
-#include "matrix.h"
 #include "graph.h"
 
 int main(int argc, char *argv[]) {
@@ -12,7 +11,6 @@ int main(int argc, char *argv[]) {
 	uint vertex_dlen = 0, edge_dlen = 0, edge_mst_dlen = 0;
 	vertex *vertex_data;
 	edge *edge_data, *edge_mst;
-	/*matrix *a = NULL;*/
 	graph *graph_temp = NULL;
 
 /* argument validation */
@@ -38,7 +36,6 @@ int main(int argc, char *argv[]) {
 	}
 	qsort(vertex_data, vertex_dlen, sizeof(vertex), vertex_compar_fn);
 	printf("vertexes: %d\n",vertex_dlen);
-	/*vertex_print(vertex_data, vertex_dlen);*/
 
 /* edge load */
 	edge_data = edge_load(argv[e_argument_index+1], &edge_dlen);
@@ -47,20 +44,19 @@ int main(int argc, char *argv[]) {
 	}
 	qsort(edge_data, edge_dlen, sizeof(edge), edge_compar_fn_by_id);
 	printf("edges: %d\n",edge_dlen);
-	/*edge_print(edge_data, edge_dlen);*/
 
-/* finding minimal tree scelet */
+/* finding mst */
 	if(mst_argument_index>=0 || mrn_argument_index>=0){
-		printf("mst testing\n");
 		graph_temp = createGraph(vertex_dlen, edge_dlen, edge_data);	
 		edge_mst = KruskalMST(graph_temp, vertex_data, &edge_mst_dlen);
 
 		if(mst_argument_index>=0){
-			printf("edge_mst_dlen:%d\n",edge_mst_dlen);
 			edge_export_mst(edge_mst, edge_mst_dlen, argv[mst_argument_index+1]);
 		}
-		/*printf("edge_mst_dlen:%d\n",edge_mst_dlen);*/
-		/*edge_print(edge_mst, edge_mst_dlen);*/
+
+		if(mrn_argument_index>=0){
+			edge_export_mrn(edge_mst, edge_mst_dlen, argv[mrn_argument_index+1]);
+		}
 	} 
 	return 0;
 }

@@ -44,7 +44,7 @@ void Union(subset subsets[], int x, int y)
 edge* KruskalMST(graph* graph_temp, vertex *vertex_data, uint *edge_mst_len)
 {   
     uint vertex_dlen = graph_temp->vertex_dlen, e = 0, i = 0, j, minimumCost = 0;
-    edge *result = (edge *)malloc(sizeof(edge)*vertex_dlen);         /* pridat dynamicke alokovani */
+    edge *result = (edge *)malloc(sizeof(edge)*vertex_dlen);         /* bylo by vhodne pridat dynamicke alokovani */
     subset *subsets;
 
     qsort(graph_temp->edges, graph_temp->edge_dlen, sizeof(edge),edge_compar_fn_by_clen);   /* serazeni hran podle clength*/
@@ -73,15 +73,12 @@ edge* KruskalMST(graph* graph_temp, vertex *vertex_data, uint *edge_mst_len)
             result[e++] = next_edge;
             Union(subsets, x, y);
         }
-    }/*
-    printf("Following are the edges in the constructed MST\n");
-    */
-    for (i = 0; i < e; ++i)
-    {
-       /* printf("%d -- %d == %f\n", result[i].source, result[i].target, result[i].clength);*/
+    }
+    
+    for (i = 0; i < e; ++i){
         minimumCost += result[i].clength;
     }
-    /*printf("Minimum Cost Spanning tree : %d\n",minimumCost);*/
+    
     *edge_mst_len = e;
     return result;
 }

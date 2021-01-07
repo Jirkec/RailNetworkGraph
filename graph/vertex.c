@@ -65,7 +65,6 @@ vertex *vertex_load(const char filename[], uint *datasize){
             if(ignore)
                 break;
 			
-			/*printf("line %d: %s\n", act_idx, word);*/
 			word = strtok(NULL, VERTEX_DELIMITERS);
 			comp_cnt++;
 		}
