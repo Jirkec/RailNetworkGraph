@@ -69,9 +69,9 @@ int main(int argc, char *argv[]) {
 
 		a = matrix_create(vertex_dlen, vertex_dlen);
 		matrix_set_edges(a, edge_data, edge_dlen, vertex_data, vertex_dlen);
-		/*matrix_print(a);*/
-		printf("clen on 1x2: %f\n",a->items[vertex_get_key_by_id(vertex_data, vertex_dlen, 1)][vertex_get_key_by_id(vertex_data, vertex_dlen, 2)]);
-		printf("clen on 1x2: %f\n",a->items[0][1]);
+		matrix_print(a);
+		/*printf("clen on 1x2: %f\n",a->items[vertex_get_key_by_id(vertex_data, vertex_dlen, 1)][vertex_get_key_by_id(vertex_data, vertex_dlen, 2)]);*/
+		/*printf("clen on 237x239: %f\n",a->items[vertex_get_key_by_id(vertex_data, vertex_dlen, 237)][vertex_get_key_by_id(vertex_data, vertex_dlen, 239)]);	*/
 		matrix_free(&a);
 	}
 

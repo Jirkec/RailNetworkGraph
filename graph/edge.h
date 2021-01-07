@@ -3,21 +3,21 @@
 
 #include "usefc.h"
 
-#define EDGE_LINE_LEN 8192
-#define EDGE_BLOCK_LEN 16
-#define EDGE_WKT_LEN 8192
+#define EDGE_LINE_LEN 13000
+#define EDGE_BLOCK_LEN 128
+#define EDGE_DATA_LINE_LEN 128
 #define CNTRYNAME_LEN 64
 #define EDGE_DELIMITERS ","
 #define EDGE_FILE_HEADER "WKT,id,nation,cntryname,source,target,clength"
 
 typedef struct theedge {
-	char wkt[EDGE_WKT_LEN];
+    char *wkt_pointer;
     uint id;
     uint nation;
     char cntryname[CNTRYNAME_LEN];
     uint source;
     uint target;
-    uint clength;
+    real clength;
 } edge; 
 
 edge *edge_load(const char filename[], uint *datasize);

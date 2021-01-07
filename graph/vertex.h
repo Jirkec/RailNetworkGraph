@@ -4,7 +4,7 @@
 #include "usefc.h"
 
 #define VERTEX_LINE_LEN 256
-#define VERTEX_BLOCK_LEN 16
+#define VERTEX_BLOCK_LEN 128
 #define VERTEX_WKT_LEN 128
 #define SNAME_LEN 64
 #define VERTEX_DELIMITERS ","

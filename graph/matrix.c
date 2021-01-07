@@ -51,6 +51,7 @@ void matrix_print(matrix *m){
 	for(i=0;i< m->rows;i++){
 		printf("| ");
 		for(j=0;j< m->cols;j++){
+			/*if( m->items[i][j] > 0)*/
 			printf("%.2f ", m->items[i][j]);
 		}
 		printf("|\n");
@@ -88,7 +89,7 @@ void matrix_set_edges(matrix *m, edge *edges, uint edge_dlen, vertex *vertexes, 
 	for(i=0; i<edge_dlen;i++){
 		source = vertex_get_key_by_id(vertexes, vertex_dlen, edges[i].source);
 		target = vertex_get_key_by_id(vertexes, vertex_dlen, edges[i].target);
-		/*printf("clen %dx%d | %dx%d: %d\n",source, target, edges[i].source, edges[i].target, edges[i].clength);*/
+		/*printf("clen %dx%d | %dx%d: %f\n",source, target, edges[i].source, edges[i].target, edges[i].clength);*/
 		if(source>=0 && target>=0){
 			m->items[source][target] = edges[i].clength;
 			m->items[target][source] = edges[i].clength;

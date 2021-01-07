@@ -6,10 +6,10 @@
 
 edge *edge_load(const char filename[], uint *datasize){
     FILE *f = NULL;
-	char line[EDGE_LINE_LEN], *word, wkt[EDGE_LINE_LEN], *wkt_end, *line_wo_wkt;
+	char line[EDGE_LINE_LEN], *word, wkt[EDGE_LINE_LEN], *wkt_end;
 	edge *temp = NULL;
 	uint act_idx = 0, max_idx = EDGE_BLOCK_LEN, comp_cnt, ignore=0, line_id = 0, i, atoied_word, invalid_case;
-	
+	real atofed_word;
 
 	if (!filename || !strcmp(filename, "")){
         printf("Invalid edge filename.\n");
@@ -27,9 +27,18 @@ edge *edge_load(const char filename[], uint *datasize){
 	if (!temp) {
 		fclose(f);
 		return NULL;
-	}	
-
-	while (fgets(line, EDGE_LINE_LEN, f)) {        
+	}
+	/*
+	uint max_line_length = 0;
+	while (fgets(line, EDGE_LINE_LEN, f)) {
+		if(strlen(line)>max_line_length)
+			max_line_length = strlen(line);
+	}
+	printf("max_line_length:%d",max_line_length);
+	return NULL;
+*/
+	while (fgets(line, EDGE_LINE_LEN, f)) { 
+		int act_wkt_len = 0;       
         ignore = 0;
       
         if(line_id==0 && !strstr(line, EDGE_FILE_HEADER)){       
@@ -46,21 +55,26 @@ edge *edge_load(const char filename[], uint *datasize){
 
 		memset((void *) &temp[act_idx], 0, sizeof(edge));
 	
-		/* WKT handeling */	
-		printf("1\n");
-		*wkt='\0';								/* nulovani wkt */printf("2\n");		
-		wkt_end = strchr(line+1, '"');			/* nalezeni konce wkt (+1, abych vynechal prvni uvozovky) */printf("3line_id:%d\n",line_id);
-		memcpy(wkt, line, wkt_end-line+1);		/* vykopirovani wkt z line (+1, abych vzal i posledni posledni uvozovky) */printf("4\n");
-		wkt[wkt_end-line+1]='\0';				/* ukonceni wkt retezce */printf("5\n");
-		line_wo_wkt = &line[wkt_end-line+2];	/* odstraneni wkt z line (+2, abych nekopiroval carku za wkt) */printf("6\n");
-		strcpy(temp[act_idx].wkt, wkt);			/* kopirovani wkt do wkt hrany */printf("7\n");
+		/* WKT handeling dynamic */
+		/**wkt='\0';*/																/* nulovani wkt *//*printf("2\n");	*/	
+		wkt_end = strchr(line+1, '"');											/* nalezeni konce wkt (+1, abych vynechal prvni uvozovky) *//*printf("3line_id:%d\n",line_id);*/
+		act_wkt_len = wkt_end-line+1;											/* velikost wkt (+1, abych vzal i posledni posledni uvozovky) */
+		strncpy(wkt, line, act_wkt_len);										/* vykopirovani wkt z line (+1, abych vzal i posledni posledni uvozovky) *//*printf("4\n");*/
+		wkt[act_wkt_len]='\0';													/* ukonceni wkt retezce *//*printf("5\n");*/
+		/*strcpy(line_wo_wkt,wkt_end+1);*/									/* odstraneni wkt z line (+2, abych nekopiroval carku za wkt) *//*printf("6 strlenwkt:%d| wktlen:%d| wktend:%s\n",strlen(wkt), act_wkt_len, wkt_end);*/
+		temp[act_idx].wkt_pointer = (char *)malloc((act_wkt_len+1) * sizeof(char));	/* alokovani pameti pro wkt  - nezapomenout uvolnit ve free */	
+		strncpy(temp[act_idx].wkt_pointer, wkt, act_wkt_len);					/* kopirovani wkt do wkt hrany *//*printf("7\n");*/
+		temp[act_idx].wkt_pointer[act_wkt_len] = '\0';
+		/*printf("act_wkt_len: %d wktpointer:%s\n",act_wkt_len,temp[act_idx].wkt_pointer);*/
 		
-		/*printf("len:%d | wkt:%s| wkt_end: %s| line:%s| line_wo_wkt:%s| \n",wkt_end-line, wkt, wkt_end, line,line_wo_wkt);*/
-
-		word = strtok(line_wo_wkt, EDGE_DELIMITERS);
+		word = strtok(wkt_end+2, EDGE_DELIMITERS);
 		comp_cnt = 0;
+		
 		while (word) {
-			if (strcmp(word, "NULL")) {                 
+			invalid_case=0;
+
+			if (strcmp(word, "NULL")) {   
+				/*printf("comp_cnt:|%d| word:|%s|",comp_cnt, word);*/
 				switch (comp_cnt) {
 					case 0: atoied_word = (uint)atoi(word);
 							for(i=0;i<act_idx;i++){
@@ -95,9 +109,9 @@ edge *edge_load(const char filename[], uint *datasize){
 							}							
 							break;
 
-					case 5: atoied_word = (uint)atoi(word);
-							if(!ignore && atoied_word > 0) {
-								temp[act_idx].clength = atoied_word; 
+					case 5: atofed_word = (real)atof(word);
+							if(!ignore && atofed_word > 0) {
+								temp[act_idx].clength = atofed_word; 
 							}else{
 								ignore = 1;
 							}
@@ -105,9 +119,9 @@ edge *edge_load(const char filename[], uint *datasize){
 					default: invalid_case=1; break;
 				}
 			}
-            if(ignore || invalid_case)
+            if(ignore || invalid_case){
                 break;
-			
+			}
 			
 			/*printf("line %d: %s\n", act_idx, word);*/
 			word = strtok(NULL, EDGE_DELIMITERS);
@@ -159,6 +173,6 @@ void edge_print(edge *edge_data, uint datasize){
 
     printf("List of loaded edges:\n");
     for(i=0;i<datasize;i++){
-        printf("i: %d | id: %d | wkt: %s | nation: %d | cntryname: %s | source: %d | target: %d | clength: %d |\n", i, edge_data[i].id, edge_data[i].wkt, edge_data[i].nation, edge_data[i].cntryname, edge_data[i].source, edge_data[i].target, edge_data[i].clength);
+        printf("i: %d | id: %d | wkt: %s | nation: %d | cntryname: %s | source: %d | target: %d | clength: %f |\n", i, edge_data[i].id, edge_data[i].wkt_pointer, edge_data[i].nation, edge_data[i].cntryname, edge_data[i].source, edge_data[i].target, edge_data[i].clength);
     }
 }

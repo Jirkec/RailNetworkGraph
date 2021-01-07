@@ -4,12 +4,25 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
+        
         {
             "name": "(Windows) Spustit",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "zadejte název programu, třeba ${workspaceFolder}/a.exe",
-            "args": [],
+            "program": "${workspaceFolder}/graph/graph.exe",
+            "args": ["-v", "nodes_cr.csv", "-e","edges_cr.csv","-mst", "eout.csv", "-mrm", "mout.csv"],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false
+        },
+        {
+            "name": "(Windows) Spustit2",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/graph/graph.exe",
+            "args": ["-v", "mst_1_nodes_input.csv", "-e","mst_1_edges_input.csv","-mst", "eout.csv", "-mrm", "mout.csv"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
