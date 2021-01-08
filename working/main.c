@@ -39,7 +39,6 @@ int main(int argc, char *argv[]) {
 /* nacitani hran */
 	edge_data = edge_load(argv[e_argument_index+1], &edge_dlen);
 	if(!edge_dlen){
-		free(vertex_data);
 		return 2;
 	}
 	qsort(edge_data, edge_dlen, sizeof(edge), edge_compar_fn_by_id);
@@ -47,25 +46,8 @@ int main(int argc, char *argv[]) {
 /* hledani minimalni kostry grafu */
 	if(mst_argument_index>=0 || mrn_argument_index>=0){
 		graph_temp = createGraph(vertex_dlen, edge_dlen, edge_data);	
-		if(!graph_temp){	
-			for(i=0;i<edge_dlen;i++){
-				free(edge_data[i].wkt_pointer);
-			}		
-			free(edge_data);
-			free(vertex_data);
-			return EXIT_FAILURE;
-		}
-
 		edge_mst = KruskalMST(graph_temp, vertex_data, &edge_mst_dlen);
-		if(!graph_temp){	
-			free(graph_temp);	
-			for(i=0;i<edge_dlen;i++){
-				free(edge_data[i].wkt_pointer);
-			}	
-			free(edge_data);
-			free(vertex_data);
-			return EXIT_FAILURE;
-		}
+
 		if(mst_argument_index>=0){
 			edge_export_mst(edge_mst, edge_mst_dlen, argv[mst_argument_index+1]);
 		}
@@ -73,17 +55,11 @@ int main(int argc, char *argv[]) {
 		if(mrn_argument_index>=0){
 			edge_export_mrn(edge_mst, edge_mst_dlen, argv[mrn_argument_index+1]);
 		}
-	}else{		
-		for(i=0;i<edge_dlen;i++){
-			free(edge_data[i].wkt_pointer);
-		}
-		free(edge_data);
-		free(vertex_data);
+	}else{
 		return EXIT_SUCCESS;
 	} 
 
-printf("edge_dlen:%d",edge_dlen);
-edge_print(edge_data, edge_dlen);
+
 /* vraceni pameti */
 		
 	free(edge_mst);

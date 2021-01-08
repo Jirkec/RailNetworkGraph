@@ -5,6 +5,7 @@
     "version": "0.2.0",
     "configurations": [
 
+
         
         {
             "name": "(Windows) Spustit",
@@ -23,6 +24,17 @@
             "request": "launch",
             "program": "${workspaceFolder}/graph/graph.exe",
             "args": ["-v", "mst_1_nodes_input.csv", "-e","mst_1_edges_input.csv","-mst", "eout.csv", "-mrm", "mout.csv"],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false
+        },
+        {
+            "name": "(Windows) Spustit3",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/graph/graph.exe",
+            "args": ["-v", "invalid_nodes.csv", "-e","invalid_edges.csv","-mst", "eout.csv", "-mrm", "mout.csv"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],

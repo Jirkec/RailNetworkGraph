@@ -1,0 +1,41 @@
+\babel@toc {nil}{}
+\contentsline {chapter}{\numberline {1}Zadání}{2}%
+\contentsline {chapter}{\numberline {2}Analýza úlohy}{3}%
+\contentsline {section}{\numberline {2.1}Rozbor}{3}%
+\contentsline {subsection}{\numberline {2.1.1}Ohodnocený neorientovaný graf}{3}%
+\contentsline {subsection}{\numberline {2.1.2}Reprezentace datové struktury Graf}{4}%
+\contentsline {subsubsection}{Matice Sousednosti}{4}%
+\contentsline {subsubsection}{Spojový seznam}{5}%
+\contentsline {chapter}{\numberline {3}Popis implementace}{6}%
+\contentsline {section}{\numberline {3.1}Přehled}{6}%
+\contentsline {subsection}{\numberline {3.1.1}edge.h}{6}%
+\contentsline {subsection}{\numberline {3.1.2}vertex.h}{7}%
+\contentsline {subsection}{\numberline {3.1.3}graph.h}{7}%
+\contentsline {subsection}{\numberline {3.1.4}usefc.h}{7}%
+\contentsline {section}{\numberline {3.2}Rozbor funkcí}{8}%
+\contentsline {subsection}{\numberline {3.2.1}edge}{8}%
+\contentsline {subsubsection}{edge\_load}{8}%
+\contentsline {subsubsection}{edge\_compar\_fn\_by\_id}{8}%
+\contentsline {subsubsection}{edge\_compar\_fn\_by\_clen}{8}%
+\contentsline {subsubsection}{edge\_compar\_fn\_by\_id\_down}{8}%
+\contentsline {subsubsection}{edge\_compar\_fn\_by\_clen\_down}{8}%
+\contentsline {subsubsection}{edge\_print}{8}%
+\contentsline {subsubsection}{edge\_export\_mst}{8}%
+\contentsline {subsubsection}{edge\_export\_mrn}{9}%
+\contentsline {subsection}{\numberline {3.2.2}vertex}{9}%
+\contentsline {subsubsection}{vertex\_load}{9}%
+\contentsline {subsubsection}{vertex\_compar\_fn}{9}%
+\contentsline {subsubsection}{vertex\_print}{9}%
+\contentsline {subsubsection}{vertex\_get\_key\_by\_id}{9}%
+\contentsline {subsection}{\numberline {3.2.3}graph}{9}%
+\contentsline {subsubsection}{createGraph}{9}%
+\contentsline {subsubsection}{find}{9}%
+\contentsline {subsubsection}{Union}{9}%
+\contentsline {subsubsection}{KruskalMST}{9}%
+\contentsline {subsection}{\numberline {3.2.4}usefc}{10}%
+\contentsline {subsubsection}{printArrayString}{10}%
+\contentsline {subsubsection}{inArrayString}{10}%
+\contentsline {section}{\numberline {3.3}main}{10}%
+\contentsline {chapter}{\numberline {4}Uživatelská příručka}{11}%
+\contentsline {section}{\numberline {4.1}Spuštění programu}{11}%
+\contentsline {chapter}{\numberline {5}Závěr}{12}%

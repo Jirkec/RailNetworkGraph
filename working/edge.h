@@ -38,7 +38,7 @@ porovnavaci fce podle id vzestupne
 */
 int edge_compar_fn_by_id(const void *p1, const void *p2);
 /* 
-porovnavaci fce podle clen sestupne
+porovnavaci fce podle id sestupne
 */
 int edge_compar_fn_by_clen(const void *p1, const void *p2);
 /* 
@@ -46,7 +46,7 @@ porovnavaci fce podle clen vzestupne
 */
 int edge_compar_fn_by_id_down(const void *p1, const void *p2);
 /* 
-porovnavaci fce podle clen sestupne
+porovnavaci fce podle id sestupne
 */
 int edge_compar_fn_by_clen_down(const void *p1, const void *p2);
 /* 

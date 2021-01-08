@@ -53,7 +53,6 @@ edge *edge_load(const char filename[], uint *datasize){
             line_id++;
             continue;
         }
-		if(strlen(line)>0){
  
 		/* priprava pameti pro aktualni hranu v cyklu */
 		memset((void *) &temp[act_idx], 0, sizeof(edge));
@@ -99,14 +98,12 @@ edge *edge_load(const char filename[], uint *datasize){
 					case 3: temp[act_idx].source = atoi(word); break;
 					
 					case 4: atoied_word = (uint)atoi(word);
-							/* source a target se nerovnaji */
 							if(!ignore && temp[act_idx].source != atoied_word){
 								for(i=0;i<act_idx;i++){
-									/* existuje spojeni */
 									if(	(temp[i].source == temp[act_idx].source && temp[i].target == atoied_word)
 										||
-										(temp[i].source == atoied_word 			&& temp[i].target == temp[act_idx].source))
-									{
+										(temp[i].source == atoied_word 			&& temp[i].target == temp[act_idx].source)
+									){
 										ignore = 1;
 									}
 								}
@@ -157,7 +154,6 @@ edge *edge_load(const char filename[], uint *datasize){
 		}
 
         line_id++;
-		}
 	}
 	
 	if (datasize) *datasize = act_idx;
@@ -236,7 +232,7 @@ int edge_compar_fn_by_clen(const void *p1, const void *p2)
     return a1->clength > b1->clength;
 }
 /* 
-porovnavaci fce podle clen sestupne
+porovnavaci fce podle id sestupne
 */
 int edge_compar_fn_by_clen_down(const void *p1, const void *p2)
 {	

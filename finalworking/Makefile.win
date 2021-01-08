@@ -1,5 +1,5 @@
-BIN	= graph.exe
-CC=gcc
+BIN = graph.exe
+CC=gcc.exe
 CFLAFS=-Wall -Wextra -pedantic -ansi
 FILES=*.c *.h
 
