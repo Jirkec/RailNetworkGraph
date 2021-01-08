@@ -8,7 +8,7 @@
 
 int main(int argc, char *argv[]) {
 	int v_argument_index, e_argument_index, mst_argument_index, mrn_argument_index;
-	uint vertex_dlen = 0, edge_dlen = 0, edge_mst_dlen = 0;
+	uint vertex_dlen = 0, edge_dlen = 0, edge_mst_dlen = 0, i;
 	vertex *vertex_data;
 	edge *edge_data, *edge_mst;
 	graph *graph_temp = NULL;
@@ -60,11 +60,15 @@ int main(int argc, char *argv[]) {
 	} 
 
 
-/* vraceni pameti */	
-	free(edge_data);
+/* vraceni pameti */
+		
 	free(edge_mst);
-	free(vertex_data);
 	free(graph_temp);
+	for(i=0;i<edge_dlen;i++){
+		free(edge_data[i].wkt_pointer);
+	}
+	free(edge_data);
+	free(vertex_data);
 
 	return 0;
 }

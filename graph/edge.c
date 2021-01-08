@@ -53,7 +53,7 @@ edge *edge_load(const char filename[], uint *datasize){
             line_id++;
             continue;
         }
-
+ 
 		/* priprava pameti pro aktualni hranu v cyklu */
 		memset((void *) &temp[act_idx], 0, sizeof(edge));
 	
@@ -132,6 +132,10 @@ edge *edge_load(const char filename[], uint *datasize){
 			
 			word = strtok(NULL, EDGE_DELIMITERS);
 			comp_cnt++;
+		}
+
+		if(ignore){
+			free(temp[act_idx].wkt_pointer);
 		}
 
         /* ignorovani cele hrany - bude prepsana dalsi hranou */
