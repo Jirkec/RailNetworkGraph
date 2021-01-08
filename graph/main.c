@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
 	edge *edge_data, *edge_mst;
 	graph *graph_temp = NULL;
 
-/* argument validation */
+/* validace argumentu */
 	if(argc < 4){
 		printf("Error: Invalid argument count!\n");
 		return EXIT_FAILURE;
@@ -29,23 +29,21 @@ int main(int argc, char *argv[]) {
 		return EXIT_FAILURE;
 	} 
 
-/* vertex load */
+/* nacitani vrcholu */
 	vertex_data = vertex_load(argv[v_argument_index+1], &vertex_dlen);
 	if(!vertex_dlen){
 		return 1;
 	}
 	qsort(vertex_data, vertex_dlen, sizeof(vertex), vertex_compar_fn);
-	printf("vertexes: %d\n",vertex_dlen);
 
-/* edge load */
+/* nacitani hran */
 	edge_data = edge_load(argv[e_argument_index+1], &edge_dlen);
 	if(!edge_dlen){
 		return 2;
 	}
 	qsort(edge_data, edge_dlen, sizeof(edge), edge_compar_fn_by_id);
-	printf("edges: %d\n",edge_dlen);
 
-/* finding mst */
+/* hledani minimalni kostry grafu */
 	if(mst_argument_index>=0 || mrn_argument_index>=0){
 		graph_temp = createGraph(vertex_dlen, edge_dlen, edge_data);	
 		edge_mst = KruskalMST(graph_temp, vertex_data, &edge_mst_dlen);
@@ -57,6 +55,16 @@ int main(int argc, char *argv[]) {
 		if(mrn_argument_index>=0){
 			edge_export_mrn(edge_mst, edge_mst_dlen, argv[mrn_argument_index+1]);
 		}
+	}else{
+		return EXIT_SUCCESS;
 	} 
+
+
+/* vraceni pameti */	
+	free(edge_data);
+	free(edge_mst);
+	free(vertex_data);
+	free(graph_temp);
+
 	return 0;
 }

@@ -4,46 +4,57 @@
 #include "vertex.h"
 #include "usefc.h"
 
+/*
+nacte vrcholy ze souboru
+@param const char filename[] - nazev souboru
+@param uint *datasize - ukazatel na promenou velikosti dat
+*/
 vertex *vertex_load(const char filename[], uint *datasize){
     FILE *f = NULL;
 	char line[VERTEX_LINE_LEN], *word;
 	vertex *temp = NULL;
 	uint act_idx = 0, max_idx = VERTEX_BLOCK_LEN, comp_cnt, ignore=0, line_id = 0;
 
+	/* osetreni parametru */
 	if (!filename || !strcmp(filename, "")){
         printf("Invalid vertex filename.\n");
         return NULL;
     } 
     
+	/* otevreni soubru */
 	f = fopen(filename, "r");
 	if (!f){ 
         printf("Cannot open vertex file.\n");
 		return NULL;
     }
 
+	/* pocatecni alokovani pameti */
 	temp = (vertex *) malloc(VERTEX_BLOCK_LEN * sizeof(vertex));
 	if (!temp) {
+		printf("Memory allocation failed in vertex_load()!\n");
 		fclose(f);
 		return NULL;
 	}	
 
+	/* cteni souboru */
 	while (fgets(line, VERTEX_LINE_LEN, f)) {        
         ignore = 0;
       
+	  /* overovani hlavicky souboru */
         if(line_id==0 && !strstr(line, VERTEX_FILE_HEADER)){       
                 printf("Invalid vertex file.\n");
                 fclose(f);
                 free(temp);
                 return NULL;                       
         }
-
         if(line_id==0){
             line_id++;
             continue;
         }
-
+		/* priprava pametu */
 		memset((void *) &temp[act_idx], 0, sizeof(vertex));
  	 
+	  	/* nacitani atributu z radky*/
 		word = strtok(line, VERTEX_DELIMITERS);
 		comp_cnt = 0;
 		while (word) {
@@ -69,10 +80,11 @@ vertex *vertex_load(const char filename[], uint *datasize){
 			comp_cnt++;
 		}
 
-        
+        /* zajisti ignorovani vrcholu */
 		if(!ignore)
 		    act_idx++;
 
+		/* dynamicke alokovani */ 
 		if (act_idx >= max_idx) {
 			vertex *t = NULL;
 			t = (vertex *) realloc(temp, (max_idx + VERTEX_BLOCK_LEN) * sizeof(vertex));
@@ -92,8 +104,18 @@ vertex *vertex_load(const char filename[], uint *datasize){
 	return temp;
 }
 
+/*
+seradi vrcholy podle id vzestupne
+*/
 int vertex_compar_fn(const void *p1, const void *p2){
     uint id1, id2;
+
+	/* osetreni parametru */
+	if(!p1 || !p2){
+		printf("Wrong params given to vertex_compar_fn()!\n");
+		return 0;
+	}
+
     id1 = ((vertex *) p1)->id;
     id2 = ((vertex *) p2)->id;
 
@@ -109,8 +131,17 @@ int vertex_compar_fn(const void *p1, const void *p2){
     return 0;
 }
 
+/*
+vypise vrcholy
+*/
 void vertex_print(vertex *vertex_data, uint datasize){
     uint i;
+	
+	/* osetreni parametru */
+	if(!vertex_data || datasize<=0){
+		printf("Wrong params given to vertex_print()!\n");
+		return;
+	}
 
     printf("List of loaded vertexes:\n");
     for(i=0;i<datasize;i++){
@@ -118,8 +149,21 @@ void vertex_print(vertex *vertex_data, uint datasize){
     }
 }
 
+/*
+najde index vrcholy v poli podle atributu id
+@param vertex *vertex_data - vrcholy
+@param uint datasize - pocet vrcholu
+@param uint id - hledane id
+*/
 int vertex_get_key_by_id(vertex *vertex_data, uint datasize, uint id){
 	uint i;
+	
+	/* osetreni parametru */
+	if(!vertex_data || datasize<=0 || id<=0 ){
+		printf("Wrong params given to vertex_get_key_by_id()!\n");
+		return -1;
+	}
+
 	for(i =0; i<datasize;i++){
 		if(vertex_data[i].id == id)
 			return i;
